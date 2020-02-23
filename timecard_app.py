@@ -16,15 +16,6 @@ login_data = {
 
 }
 
-
-
-
-#with requests.Session() as sess:
-    #top_level = "https://secure.acuityscheduling.com/login.php"
-    #req = sess.get(top_level, headers=headers)
-    #req = sess.post(top_level, data=login_data, headers=headers)
-    #print(req.content)
-
 date = input("Paste URL of paystub sheet:  ")
 spread = ezsheets.Spreadsheet(date)
 #change? url encode?
@@ -43,11 +34,14 @@ while cont == "Y":
         req = requests.get("https://acuityscheduling.com/api/v1/appointments", params=payload, auth=(login_data["username"], login_data["password"]))
         schedule_soup = BeautifulSoup(req.content, "html5lib")
         print(schedule_soup)
+        #decode to json
         name_spans = schedule_soup.find_all("#cal-parent:395910<>America/New_York appt-name")
+        #iterate from json instead
         for name in name_spans:
             names.append(name.get_text())
 
         time_spans = schedule_soup.find_all("#cal-parent:395910<>America/New_York type-name")
+        #iterate from json
         for time in time_spans:
             session_lengths.append(time.get_text())
 
